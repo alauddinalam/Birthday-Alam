@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Birthday Wish Website</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Poppins", sans-serif;
+            background: linear-gradient(135deg, #b60f14, #180d45);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: #c755aecc;
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 420px;
+            width: 90%;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        input, button, textarea, select {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border: none;
+            outline: none;
+            font-size: 16px;
+        }
+
+        input, textarea, select {
+            background: #f2f2f2;
+        }
+
+        button {
+            background: #ff6b81;
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #ff4757;
+        }
+
+        #preview {
+            margin-top: 20px;
+            display: none;
+        }
+
+        #preview img {
+            width: 100%;
+            border-radius: 15px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🎉 Birthday Wish Maker 🎉</h2>
+
+    <input type="text" id="wishBy" placeholder="Wish by (Your Name)" />
+    <input type="text" id="wishTo" placeholder="Wish to (Birthday Person)" />
+
+    <label>Upload Birthday Photo:</label>
+    <input type="file" id="photo" accept="image/*" />
+
+    <label>Write Your Birthday Message:</label>
+    <textarea id="customMessage" placeholder="Enter your birthday message here..." style="height:80px;"></textarea>
+
+    <label>Choose a Birthday Song:</label>
+    <input type="file" id="song" accept="audio/*" />
+
+    <button onclick="makeWish()">Generate Birthday Wish</button>
+
+    <div id="preview">
+        <img id="photoPreview" />
+        <h2 id="message"></h2>
+        <p id="wisher"></p>
+        <audio id="audioPlayer" controls autoplay></audio>
+        <button id="shareBtn" style="background:#1ebea5;margin-top:10px;" onclick="sendWhatsApp()">Send Message on WhatsApp</button>
+    </div>
+</div>
+
+<script src="index.js"></script>
+
+</body>
+</html>
