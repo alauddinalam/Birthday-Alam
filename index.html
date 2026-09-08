@@ -3,99 +3,113 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Birthday Wish Website</title>
+    <title>Wishwell | Birthday Wish Maker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: "Poppins", sans-serif;
-            background: linear-gradient(135deg, #b60f14, #180d45);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-
-        .container {
-            background: #c755aecc;
-            padding: 30px;
-            border-radius: 20px;
-            max-width: 420px;
-            width: 90%;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            text-align: center;
-        }
-
-        h2 {
-            margin-bottom: 15px;
-            color: #333;
-        }
-
-        input, button, textarea, select {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border-radius: 10px;
-            border: none;
-            outline: none;
-            font-size: 16px;
-        }
-
-        input, textarea, select {
-            background: #f2f2f2;
-        }
-
-        button {
-            background: #ff6b81;
-            color: white;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        button:hover {
-            background: #ff4757;
-        }
-
-        #preview {
-            margin-top: 20px;
-            display: none;
-        }
-
-        #preview img {
-            width: 100%;
-            border-radius: 15px;
-            margin-bottom: 15px;
-        }
+        :root { --ink: #1c2533; --muted: #6b7280; --cream: #fffaf3; --coral: #f26b5e; --plum: #3a243d; --line: #eadfd2; }
+        * { box-sizing: border-box; }
+        body { margin: 0; min-height: 100vh; color: var(--ink); font-family: "DM Sans", sans-serif; background: #f8efe7; }
+        .page { min-height: 100vh; display: grid; place-items: center; padding: 32px 18px; background: radial-gradient(circle at 12% 12%, #ffd8b8 0 9%, transparent 28%), radial-gradient(circle at 94% 88%, #dfcadc 0 8%, transparent 27%), var(--cream); }
+        .shell { width: min(1080px, 100%); min-height: 680px; display: grid; grid-template-columns: .82fr 1.18fr; overflow: hidden; border: 1px solid rgba(255,255,255,.8); border-radius: 24px; background: rgba(255,255,255,.72); box-shadow: 0 24px 70px rgba(58,36,61,.14); }
+        .intro { position: relative; display: flex; flex-direction: column; justify-content: space-between; padding: 44px; color: #fff; background: var(--plum); overflow: hidden; }
+        .intro::after { content: ""; position: absolute; width: 360px; height: 360px; right: -170px; bottom: -150px; border: 1px solid rgba(255,255,255,.2); border-radius: 50%; box-shadow: 0 0 0 30px rgba(255,255,255,.04), 0 0 0 60px rgba(255,255,255,.03); }
+        .brand { position: relative; z-index: 1; font-size: 13px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
+        .intro-copy { position: relative; z-index: 1; }
+        h1, h2 { font-family: "Playfair Display", serif; }
+        h1 { max-width: 360px; margin: 0 0 18px; font-size: clamp(42px, 5vw, 64px); line-height: .98; }
+        .intro p { max-width: 320px; margin: 0; color: #e8dbe5; line-height: 1.7; }
+        .steps { position: relative; z-index: 1; display: flex; gap: 10px; align-items: center; color: #d6c5d3; font-size: 12px; }
+        .step-dot { width: 28px; height: 28px; display: grid; place-items: center; border: 1px solid #d6c5d3; border-radius: 50%; }
+        .step-dot.active { color: var(--plum); background: #fff; border-color: #fff; }
+        .form-panel { padding: 52px clamp(28px, 6vw, 76px); }
+        .eyebrow { margin: 0 0 8px; color: var(--coral); font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+        .form-panel h2 { margin: 0 0 8px; font-size: 34px; }
+        .form-note { margin: 0 0 28px; color: var(--muted); font-size: 14px; }
+        .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        label { display: block; margin: 0 0 8px; color: #4b5563; font-size: 12px; font-weight: 700; }
+        input, textarea { width: 100%; padding: 13px 14px; border: 1px solid var(--line); border-radius: 10px; outline: none; color: var(--ink); background: #fff; font: inherit; transition: border-color .2s, box-shadow .2s; }
+        input:focus, textarea:focus { border-color: var(--coral); box-shadow: 0 0 0 3px rgba(242,107,94,.14); }
+        input[type="file"] { padding: 10px; font-size: 12px; }
+        textarea { min-height: 112px; resize: vertical; }
+        .field { margin-bottom: 18px; }
+        .button, .secondary-button { width: 100%; padding: 14px 18px; border: 0; border-radius: 10px; font: inherit; font-weight: 700; cursor: pointer; transition: transform .2s, box-shadow .2s, background .2s; }
+        .button { color: #fff; background: var(--coral); box-shadow: 0 10px 22px rgba(242,107,94,.24); }
+        .button:hover { background: #df584d; transform: translateY(-2px); box-shadow: 0 14px 26px rgba(242,107,94,.3); }
+        .secondary-button { color: var(--plum); background: #f2e9ed; }
+        .secondary-button:hover { background: #e9dce4; }
+        .error { min-height: 20px; margin: 0 0 8px; color: #bc3e3e; font-size: 13px; }
+        .hidden { display: none !important; }
+        .result-page { background: radial-gradient(circle at 8% 12%, #ffd6bd, transparent 25%), radial-gradient(circle at 92% 85%, #d9c3d8, transparent 28%), #f8efe7; }
+        .result-shell { width: min(980px, 100%); text-align: center; }
+        .result-shell .eyebrow { animation: rise .7s ease both; }
+        .result-title { margin: 0 0 26px; font-size: clamp(40px, 6vw, 68px); line-height: 1; animation: rise .7s .08s ease both; }
+        .wish-card { display: grid; grid-template-columns: 1fr 1fr; min-height: 450px; overflow: hidden; border-radius: 20px; background: #fff; box-shadow: 0 24px 70px rgba(58,36,61,.16); animation: card-in .9s .16s cubic-bezier(.2,.8,.2,1) both; }
+        .wish-photo { min-height: 450px; background: #eadbd0; }
+        .wish-photo img { width: 100%; height: 100%; display: block; object-fit: cover; }
+        .wish-copy { display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 38px; }
+        .wish-copy h2 { margin: 0 0 20px; color: var(--plum); font-size: 38px; }
+        .wish-message { max-width: 320px; margin: 0 0 22px; color: #525866; line-height: 1.7; white-space: pre-wrap; }
+        .wisher { margin: 0 0 28px; color: var(--coral); font-weight: 700; }
+        audio { width: 100%; max-width: 300px; margin-bottom: 24px; }
+        .result-actions { display: flex; gap: 12px; width: min(420px, 100%); margin: 24px auto 0; animation: rise .7s .5s ease both; }
+        .result-actions button { flex: 1; }
+        @keyframes card-in { from { opacity: 0; transform: translateY(28px) scale(.97); } to { opacity: 1; transform: none; } }
+        @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+        @media (max-width: 720px) { .shell { grid-template-columns: 1fr; } .intro { min-height: 300px; padding: 30px; } .intro h1 { font-size: 44px; } .form-panel { padding: 34px 24px; } .wish-card { grid-template-columns: 1fr; } .wish-photo { min-height: 300px; max-height: 55vh; } .wish-copy { padding: 34px 24px; } .field-row, .result-actions { grid-template-columns: 1fr; flex-direction: column; } }
     </style>
 </head>
 <body>
+<main id="formPage" class="page">
+    <section class="shell" aria-label="Birthday wish creator">
+        <aside class="intro">
+            <div class="brand">Wishwell / 01</div>
+            <div class="intro-copy">
+                <h1>Make their day unforgettable.</h1>
+                <p>Gather a favorite photo, a few heartfelt words, and a song that feels like them.</p>
+            </div>
+            <div class="steps"><span class="step-dot active">1</span><span>Build your wish</span><span>—</span><span class="step-dot">2</span><span>Share the moment</span></div>
+        </aside>
+        <section class="form-panel">
+            <p class="eyebrow">A little something special</p>
+            <h2>Create a birthday wish</h2>
+            <p class="form-note">Every detail is needed to create your finished birthday card.</p>
+            <form id="wishForm">
+                <div class="field-row">
+                    <div class="field"><label for="wishBy">Your name</label><input type="text" id="wishBy" placeholder="e.g. Maya" required /></div>
+                    <div class="field"><label for="wishTo">Birthday person</label><input type="text" id="wishTo" placeholder="e.g. Alex" required /></div>
+                </div>
+                <div class="field"><label for="photo">Birthday photo</label><input type="file" id="photo" accept="image/*" required /></div>
+                <div class="field"><label for="customMessage">Your message</label><textarea id="customMessage" placeholder="Write something they will want to keep..." required></textarea></div>
+                <div class="field"><label for="song">A song for the moment</label><input type="file" id="song" accept="audio/*" required /></div>
+                <p id="formError" class="error" role="alert"></p>
+                <button class="button" type="submit">Generate birthday wish <i class="fa-solid fa-arrow-right"></i></button>
+            </form>
+        </section>
+    </section>
+</main>
 
-<div class="container">
-    <h2>🎉 Birthday Wish Maker 🎉</h2>
-
-    <input type="text" id="wishBy" placeholder="Wish by (Your Name)" />
-    <input type="text" id="wishTo" placeholder="Wish to (Birthday Person)" />
-
-    <label>Upload Birthday Photo:</label>
-    <input type="file" id="photo" accept="image/*" />
-
-    <label>Write Your Birthday Message:</label>
-    <textarea id="customMessage" placeholder="Enter your birthday message here..." style="height:80px;"></textarea>
-
-    <label>Choose a Birthday Song:</label>
-    <input type="file" id="song" accept="audio/*" />
-
-    <button onclick="makeWish()">Generate Birthday Wish</button>
-
-    <div id="preview">
-        <img id="photoPreview" />
-        <h2 id="message"></h2>
-        <p id="wisher"></p>
-        <audio id="audioPlayer" controls autoplay></audio>
-        <button id="shareBtn" style="background:#1ebea5;margin-top:10px;" onclick="sendWhatsApp()">Send Message on WhatsApp</button>
-    </div>
-</div>
-
+<main id="resultPage" class="page result-page hidden">
+    <section class="result-shell" aria-label="Generated birthday wish">
+        <p class="eyebrow">Your wish is ready</p>
+        <h1 class="result-title">Made with love, for <span id="resultName"></span>.</h1>
+        <article class="wish-card">
+            <div class="wish-photo"><img id="photoPreview" alt="Birthday memory" /></div>
+            <div class="wish-copy">
+                <h2>Happy birthday!</h2>
+                <p id="message" class="wish-message"></p>
+                <p id="wisher" class="wisher"></p>
+                <audio id="audioPlayer" controls></audio>
+            </div>
+        </article>
+        <div class="result-actions">
+            <button id="shareBtn" class="button" type="button"><i class="fa-brands fa-whatsapp"></i> Share on WhatsApp</button>
+            <button id="newWishBtn" class="secondary-button" type="button">Create another</button>
+        </div>
+    </section>
+</main>
 <script src="index.js"></script>
 
 </body>

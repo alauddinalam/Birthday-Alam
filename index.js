@@ -1,54 +1,53 @@
-function makeWish() {
+const wishForm = document.getElementById('wishForm');
+const formPage = document.getElementById('formPage');
+const resultPage = document.getElementById('resultPage');
+const formError = document.getElementById('formError');
+const audioPlayer = document.getElementById('audioPlayer');
+let photoUrl = '';
+let songUrl = '';
+
+wishForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    formError.textContent = '';
+
     const wishBy = document.getElementById('wishBy').value.trim();
     const wishTo = document.getElementById('wishTo').value.trim();
     const customMessage = document.getElementById('customMessage').value.trim();
     const photoFile = document.getElementById('photo').files[0];
     const songFile = document.getElementById('song').files[0];
 
-    if(!wishBy || !wishTo || !customMessage) {
-        alert("Please fill all the fields!");
+    if (!wishBy || !wishTo || !customMessage || !photoFile || !songFile) {
+        formError.textContent = 'Please complete every field, including the photo and song.';
         return;
     }
 
-    // Display photo if uploaded
-    if(photoFile) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            document.getElementById('photoPreview').src = e.target.result;
-        }
-        reader.readAsDataURL(photoFile);
-    } else {
-        document.getElementById('photoPreview').src = "";
-    }
-
-    // Display message and wisher
+    photoUrl = URL.createObjectURL(photoFile);
+    songUrl = URL.createObjectURL(songFile);
+    document.getElementById('photoPreview').src = photoUrl;
+    document.getElementById('resultName').textContent = wishTo;
     document.getElementById('message').textContent = customMessage;
-    document.getElementById('wisher').textContent = `- ${wishBy} to ${wishTo}`;
+    document.getElementById('wisher').textContent = `With love, ${wishBy}`;
+    audioPlayer.src = songUrl;
+    formPage.classList.add('hidden');
+    resultPage.classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+});
 
-    // Play song if uploaded
-    const audioPlayer = document.getElementById('audioPlayer');
-    if(songFile) {
-        const songURL = URL.createObjectURL(songFile);
-        audioPlayer.src = songURL;
-        audioPlayer.play();
-    } else {
-        audioPlayer.src = "";
-    }
-
-    document.getElementById('preview').style.display = "block";
-}
-
-// Function to send message via WhatsApp
-function sendWhatsApp() {
-    const wishBy = document.getElementById('wishBy').value.trim();
+document.getElementById('shareBtn').addEventListener('click', () => {
     const wishTo = document.getElementById('wishTo').value.trim();
+    const wishBy = document.getElementById('wishBy').value.trim();
     const customMessage = document.getElementById('customMessage').value.trim();
+    const message = `Happy Birthday ${wishTo}!\n${customMessage}\nWith love, ${wishBy}`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank', 'noopener');
+});
 
-    if(!wishBy || !wishTo || !customMessage) return;
-
-    const message = `Happy Birthday ${wishTo}! 🎉\n${customMessage}\n- ${wishBy}`;
-    const encodedMessage = encodeURIComponent(message);
-
-    // Opens WhatsApp (web or app) to send message
-    window.open(`https://wa.me/?text=${encodedMessage}`, '_blank');
-}
+document.getElementById('newWishBtn').addEventListener('click', () => {
+    if (photoUrl) URL.revokeObjectURL(photoUrl);
+    if (songUrl) URL.revokeObjectURL(songUrl);
+    audioPlayer.pause();
+    audioPlayer.removeAttribute('src');
+    wishForm.reset();
+    resultPage.classList.add('hidden');
+    formPage.classList.remove('hidden');
+    document.getElementById('wishBy').focus();
+});
