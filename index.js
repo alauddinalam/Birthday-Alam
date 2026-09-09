@@ -3,8 +3,15 @@ const formPage = document.getElementById('formPage');
 const resultPage = document.getElementById('resultPage');
 const formError = document.getElementById('formError');
 const audioPlayer = document.getElementById('audioPlayer');
+const photoPreview = document.getElementById('photoPreview');
 let photoUrl = '';
 let songUrl = '';
+
+photoPreview.addEventListener('error', () => {
+    formError.textContent = 'That photo could not be displayed. Please choose another image.';
+    resultPage.classList.add('hidden');
+    formPage.classList.remove('hidden');
+});
 
 wishForm.addEventListener('submit', (event) => {
     event.preventDefault();
@@ -23,7 +30,8 @@ wishForm.addEventListener('submit', (event) => {
 
     photoUrl = URL.createObjectURL(photoFile);
     songUrl = URL.createObjectURL(songFile);
-    document.getElementById('photoPreview').src = photoUrl;
+    photoPreview.src = photoUrl;
+    photoPreview.alt = `Birthday memory for ${wishTo}`;
     document.getElementById('resultName').textContent = wishTo;
     document.getElementById('message').textContent = customMessage;
     document.getElementById('wisher').textContent = `With love, ${wishBy}`;
