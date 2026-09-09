@@ -36,8 +36,10 @@ wishForm.addEventListener('submit', (event) => {
     document.getElementById('message').textContent = customMessage;
     document.getElementById('wisher').textContent = `With love, ${wishBy}`;
     audioPlayer.src = songUrl;
+    audioPlayer.load();
     formPage.classList.add('hidden');
     resultPage.classList.remove('hidden');
+    audioPlayer.play().catch(() => {});
     window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
