@@ -4,8 +4,32 @@ const resultPage = document.getElementById('resultPage');
 const formError = document.getElementById('formError');
 const audioPlayer = document.getElementById('audioPlayer');
 const photoPreview = document.getElementById('photoPreview');
+const photoInput = document.getElementById('photo');
+const imagePreview = document.getElementById('imagePreview');
+const selectedPhotoPreview = document.getElementById('selectedPhotoPreview');
+const imagePreviewText = document.getElementById('imagePreviewText');
 let photoUrl = '';
 let songUrl = '';
+
+function updateImagePreview() {
+    const photoFile = photoInput.files[0];
+    const imageSize = document.querySelector('input[name="imageSize"]:checked').value;
+
+    imagePreview.classList.toggle('preview-small', imageSize === 'small');
+    imagePreviewText.textContent = `${imageSize === 'small' ? 'Small' : 'Large'} image preview is ready.`;
+
+    if (photoFile) {
+        if (photoUrl) URL.revokeObjectURL(photoUrl);
+        photoUrl = URL.createObjectURL(photoFile);
+        selectedPhotoPreview.src = photoUrl;
+        imagePreview.classList.remove('hidden');
+    }
+}
+
+photoInput.addEventListener('change', updateImagePreview);
+document.querySelectorAll('input[name="imageSize"]').forEach((sizeInput) => {
+    sizeInput.addEventListener('change', updateImagePreview);
+});
 
 photoPreview.addEventListener('error', () => {
     formError.textContent = 'That photo could not be displayed. Please choose another image.';
@@ -22,16 +46,18 @@ wishForm.addEventListener('submit', (event) => {
     const customMessage = document.getElementById('customMessage').value.trim();
     const photoFile = document.getElementById('photo').files[0];
     const songFile = document.getElementById('song').files[0];
+    const imageSize = document.querySelector('input[name="imageSize"]:checked').value;
 
     if (!wishBy || !wishTo || !customMessage || !photoFile || !songFile) {
         formError.textContent = 'Please complete every field, including the photo and song.';
         return;
     }
 
-    photoUrl = URL.createObjectURL(photoFile);
+    if (!photoUrl) photoUrl = URL.createObjectURL(photoFile);
     songUrl = URL.createObjectURL(songFile);
     photoPreview.src = photoUrl;
     photoPreview.alt = `Birthday memory for ${wishTo}`;
+    document.querySelector('.wish-photo').classList.toggle('image-small', imageSize === 'small');
     document.getElementById('resultName').textContent = wishTo;
     document.getElementById('message').textContent = customMessage;
     document.getElementById('wisher').textContent = `With love, ${wishBy}`;
@@ -57,6 +83,8 @@ document.getElementById('newWishBtn').addEventListener('click', () => {
     audioPlayer.pause();
     audioPlayer.removeAttribute('src');
     wishForm.reset();
+    imagePreview.classList.add('hidden');
+    selectedPhotoPreview.removeAttribute('src');
     resultPage.classList.add('hidden');
     formPage.classList.remove('hidden');
     document.getElementById('wishBy').focus();
